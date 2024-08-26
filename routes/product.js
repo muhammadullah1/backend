@@ -1,12 +1,9 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const controller = require("../controllers/user");
+const controller = require("../controllers/product");
 const validate = require("../middlewares/validate");
-const { createUser, updateUser } = require("../validations/schemas/user");
+const { createProduct } = require("../validations/schemas/product");
 
-router.post("/", validate(createUser), controller.get);
-router.post("/", validate(createUser), controller.create);
-router.post("/", validate(createUser), controller.update);
-router.post("/", validate(createUser), controller.delete);
+router.post("/", validate(createProduct), controller.create);
 
 module.exports = router;

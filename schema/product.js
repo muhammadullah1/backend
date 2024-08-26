@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema.Types;
 
 const productSchema = new mongoose.Schema(
   {
@@ -14,17 +15,19 @@ const productSchema = new mongoose.Schema(
       type: Number,
       allowNull: false,
     },
-    category: { type: ObjectId, ref: 'categories' },
-    subCategory: { type: ObjectId, ref: 'subCategories' },
-    seller: { type: ObjectId, ref: 'users' },
+    category: { type: ObjectId, ref: "categories" },
+    subCategory: { type: ObjectId, ref: "subCategories" },
     images: [String],
-    status: { type: String, enum: ['pending', 'approved', 'rejected'] },
-    category: { type: ObjectId, ref: 'categories' },
-    user: { type: ObjectId, ref: 'users' },
+    user: { type: ObjectId, ref: "users" },
+    status: {
+      type: String,
+      enum: ["draft", "live", "hidden", "archived"],
+      default: "draft",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-exports.Product = mongoose.model('Product', productSchema, 'products');
+exports.Product = mongoose.model("Product", productSchema, "products");

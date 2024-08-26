@@ -1,20 +1,19 @@
-const { Product } = require('../schema/product');
-
+const { Product } = require("../schema/product");
 
 module.exports = {
-  createProduct: async (product) => {
-    return await Product.create(product);
+  create: async (data) => {
+    return await Product.create(data);
   },
-  getProducts: async (filter) => {
+  get: async (filter) => {
     return await Product.find(filter);
   },
-  getProductBy: async (filter) => {
+  getBy: async (filter) => {
     return await Product.findOne(filter);
   },
-  deleteProduct: async (id) => {
+  delete: async (id) => {
     return await Product.deleteOne({ _id: id });
   },
-  updateProduct: async (id, product) => {
-    return await Product.updateOne({ _id: id }, product);
+  update: async (id, data) => {
+    return await Product.updateOne({ _id: id }, data);
   },
 };

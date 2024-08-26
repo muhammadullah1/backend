@@ -31,7 +31,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["buyer", "seller", "admin"],
+      enum: ["user", "admin"],
+      default: "user",
     },
     profile: {
       bio: String,

@@ -19,7 +19,7 @@ module.exports = {
       user = user.toObject();
       delete user.password;
       const signInToken = encrypt(user, config.get("signIn.jwtSecret"));
-      res.status(201).send({
+      res.status(200).send({
         success: true,
         message: "User logged in successfully.",
         data: { accessToken: signInToken, user },
