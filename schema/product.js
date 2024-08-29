@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema(
     title: {
       type: String,
       allowNull: false,
+      unique: true,
     },
     description: {
       type: String,
@@ -15,10 +16,40 @@ const productSchema = new mongoose.Schema(
       type: Number,
       allowNull: false,
     },
-    category: { type: ObjectId, ref: "categories" },
-    subCategory: { type: ObjectId, ref: "subCategories" },
+    category: {
+      type: ObjectId,
+      ref: "categories",
+      validate: {
+        validator: async function(categoryId) {
+          const category = await mongoose.model("Category").findById(categoryId);
+          return !!category;
+        },
+        message: "Category not found",
+      },
+    },
+    subCategory: {
+      type: ObjectId,
+      ref: "subCategories",
+      validate: {
+        validator: async function(subCategoryId) {
+          const subCategory = await mongoose.model("SubCategory").findById(subCategoryId);
+          return !!subCategory;
+        },
+        message: "SubCategory not found",
+      },
+    },
+    user: {
+      type: ObjectId,
+      ref: "users",
+      validate: {
+        validator: async function(userId) {
+          const user = await mongoose.model("User").findById(userId);
+          return !!user;
+        },
+        message: "User not found",
+      },
+    },
     images: [String],
-    user: { type: ObjectId, ref: "users" },
     status: {
       type: String,
       enum: ["draft", "live", "hidden", "archived"],

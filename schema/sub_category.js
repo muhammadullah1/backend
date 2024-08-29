@@ -11,7 +11,20 @@ const subCategorySchema = new mongoose.Schema(
       type: String,
       allowNull: true,
     },
-    categoryId: { type: ObjectId, ref: 'categories' }
+    categoryId: {
+      type: ObjectId,
+      ref: 'Category',
+      required: true,
+      validate: {
+        validator: async function(categoryId) {
+          const category = await mongoose.models.Category.findById(categoryId);
+          if (!category) {
+            throw new Error('Invalid category ID');
+          }
+        },
+        message: 'Invalid category ID'
+      }
+    },
   },
   {
     timestamps: true,
