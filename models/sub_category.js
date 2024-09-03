@@ -1,20 +1,34 @@
-const { SubCategory } = require('../schema/sub_category');
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema.Types;
 
+const subCategorySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      allowNull: false,
+    },
+    description: {
+      type: String,
+      allowNull: true,
+    },
+    categoryId: {
+      type: ObjectId,
+      ref: 'Category',
+      required: true,
+      validate: {
+        validator: async function(categoryId) {
+          const category = await mongoose.models.Category.findById(categoryId);
+          if (!category) {
+            throw new Error('Invalid category ID');
+          }
+        },
+        message: 'Invalid category ID'
+      }
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = {
-  create: async (product) => {
-    return await SubCategory.create(product);
-  },
-  get: async (filter) => {
-    return await SubCategory.find(filter);
-  },
-  gettBy: async (filter) => {
-    return await SubCategory.findOne(filter);
-  },
-  delete: async (id) => {
-    return await SubCategory.deleteOne({ _id: id });
-  },
-  update: async (id, data) => {
-    return await SubCategory.updateOne({ _id: id }, data);
-  },
-};
+exports.SubCategory = mongoose.model("SubCategory", subCategorySchema, "subCategories");

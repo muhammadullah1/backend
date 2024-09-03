@@ -1,5 +1,5 @@
 const ApiError = require("../utils/ApiError");
-const userModel = require("../models/user");
+const { User } = require('../models');
 const bcrypt = require("bcrypt");
 const { encrypt } = require("../utils/token");
 const config = require("../config");
@@ -8,7 +8,7 @@ module.exports = {
   login: async (req, res, next) => {
     try {
       let { email, password } = req.body;
-      let user = await userModel.getUserBy({ email });
+      let user = await User.findOne({ email });
       if (!user) {
         throw new ApiError(404, "User doesn't exists");
       }

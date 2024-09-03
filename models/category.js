@@ -1,20 +1,20 @@
-const { Category } = require('../schema/category');
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema.Types;
 
+const categorySchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      allowNull: false,
+    },
+    description: {
+      type: String,
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = {
-  create: async (product) => {
-    return await Category.create(product);
-  },
-  get: async (filter) => {
-    return await Category.find(filter);
-  },
-  gettBy: async (filter) => {
-    return await Category.findOne(filter);
-  },
-  delete: async (id) => {
-    return await Category.deleteOne({ _id: id });
-  },
-  update: async (id, data) => {
-    return await Category.updateOne({ _id: id }, data);
-  },
-};
+exports.Category = mongoose.model("Category", categorySchema, "categories");

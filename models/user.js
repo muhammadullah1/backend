@@ -1,20 +1,79 @@
-const { User } = require('../schema/user');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
+const userSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      allowNull: true,
+    },
+    lastName: {
+      type: String,
+      allowNull: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    authSource: {
+      type: String,
+      enum: ["Normal", "Google", "Facebook"],
+      default: "Normal",
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    profile: {
+      bio: String,
+      profilePicture: String,
+    },
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      zip: String,
+      country: String,
+    },
+    stripeCustomerId: {
+      type: String,
+      allowNull: true,
+    },
+    archived: {
+      type: Boolean,
+      default: false,
+    },
+    lastActive: {
+      type: Date,
+      allowNull: true,
+    },
+    termsAccepted: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = {
-  createUser: async (user) => {
-    return await User.create(user);
-  },
-  getUsers: async (filter) => {
-    return await User.find(filter);
-  },
-  getUserBy: async (filter) => {
-    return await User.findOne(filter);
-  },
-  deleteUser: async (ID) => {
-    return await User.deleteOne({ _id: ID });
-  },
-  updateUser: async (ID, user) => {
-    return await User.updateOne({ _id: ID }, user);
-  },
-};
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+  return next();
+});
+
+exports.User = mongoose.model("User", userSchema, "users");
