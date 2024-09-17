@@ -1,4 +1,4 @@
-const productModel = require("../models/product");
+const { Product } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         user,
       } = req;
 
-      await productModel.create({
+      await Product.create({
         title,
         description,
         price,
@@ -29,11 +29,11 @@ module.exports = {
   },
   get: async (req, res, next) => {
     try {
-      const products = await productModel.get();
+      const products = await Product.find();
 
       res.send({
         success: true,
-        message: "product list",
+        message: "products list",
         data: products,
       });
     } catch (error) {

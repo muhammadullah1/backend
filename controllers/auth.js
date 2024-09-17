@@ -10,11 +10,11 @@ module.exports = {
       let { email, password } = req.body;
       let user = await User.findOne({ email });
       if (!user) {
-        throw new ApiError(404, "User doesn't exists");
+        throw new ApiError(400, "User doesn't exists");
       }
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        throw new ApiError(404, "Incorrect Password.");
+        throw new ApiError(400, "Incorrect Password.");
       }
       user = user.toObject();
       delete user.password;
