@@ -1,4 +1,4 @@
-const categoryModel = require("../models/category");
+const { Category } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
     try {
       const { title, description } = req.body;
 
-      await categoryModel.create({
+      await Category.create({
         title,
         description,
       });
