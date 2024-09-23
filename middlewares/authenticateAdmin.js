@@ -1,7 +1,8 @@
-const userModel = require("../models/user");
+const { User } = require("../models");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const ApiError = require("../utils/ApiError");
+
 module.exports = async (req, res, next) => {
   try {
     const authToken = req.header("Authorization");
@@ -10,7 +11,7 @@ module.exports = async (req, res, next) => {
     if (!authToken) throw new ApiError(400, "Authorization Header is required");
     const decoded = jwt.verify(authToken, secret);
     const userId = decoded.user._id;    
-    let admin = await userModel.getUserBy({ _id: userId, role: "admin" });
+    let admin = await User.findOne({ _id: userId, role: "admin" });
     if (!admin) {
       throw new ApiError(400, "Invalid user");
     }

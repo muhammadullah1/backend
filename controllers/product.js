@@ -1,22 +1,28 @@
-const { Product } = require("../models");
+const { Product, Category } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = {
   create: async (req, res, next) => {
     try {
       const {
-        body: { title, description, price, category, subCategory, images },
+        body: { title, description, price, categoryId, images },
         user,
       } = req;
+      
+      const category = await Category.findOne({ _id: categoryId });
+      if (!category) throw new ApiError(400, "invalid category");
+      const product = await Product.findOne({ title });
+      if (product) throw new ApiError(409, "product already exists");
+      if (!user) throw new ApiError(409, "invalid user");
+
 
       await Product.create({
         title,
         description,
         price,
         category,
-        subCategory,
         images,
-        user: user._id
+        user: user._id,
       });
 
       res.send({

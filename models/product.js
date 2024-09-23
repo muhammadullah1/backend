@@ -27,17 +27,6 @@ const productSchema = new mongoose.Schema(
         message: "Category not found",
       },
     },
-    subCategory: {
-      type: ObjectId,
-      ref: "subCategories",
-      validate: {
-        validator: async function(subCategoryId) {
-          const subCategory = await mongoose.model("SubCategory").findById(subCategoryId);
-          return !!subCategory;
-        },
-        message: "SubCategory not found",
-      },
-    },
     user: {
       type: ObjectId,
       ref: "users",
