@@ -1,26 +1,27 @@
-const { Users } = require("../models");
+const { User } = require("../models");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const ApiError = require("../utils/ApiError");
+
 module.exports = async (req, res, next) => {
   try {
-    const { userId } = req.params;
     const authToken = req.header("Authorization");
     const secret = config.get("signIn.jwtSecret");
 
-    if (!authToken) {
-      throw new ApiError(400, "Authorization Header is required");
-    }
+    if (!authToken) throw new ApiError(400, "Authorization Header is required");
     const decoded = jwt.verify(authToken, secret);
 
-    const user = await Users.findByPk(userId);
+    const userId = decoded.user._id;    
+    let user = await User.findOne({ _id: userId, role: "user" });
     if (!user) {
-      throw new ApiError(400, "User doesn't exis");
+      throw new ApiError(400, "Invalid user");
     }
-    if (user.id !== decoded.user.id) {
+    if (!user._id.equals(userId)) {
       throw new ApiError(400, "Invalid token");
     }
-
+    
+    user = user.toJSON();
+    delete user.password;
     req.user = user;
     next();
   } catch (err) {

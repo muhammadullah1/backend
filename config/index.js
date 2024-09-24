@@ -55,6 +55,14 @@ const config = convict({
     default: "",
     env: "CURRENT_ENDPOINT_HOST",
   },
+  stripe: {
+    secretKey: {
+      doc: "Stripe secret key",
+      format: String,
+      default: "",
+      env: "STRIPE_SECRET_KEY",
+    }
+  },
 });
 
 const env = config.get("env");
