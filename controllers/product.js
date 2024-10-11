@@ -33,6 +33,19 @@ module.exports = {
       next(error);
     }
   },
+  getOne: async (req, res, next) => {
+    try {
+      const product = await Product.findOne({ _id: req.params.id });
+
+      res.send({
+        success: true,
+        message: "product found successfully",
+        data: product,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
   get: async (req, res, next) => {
     try {
       const products = await Product.find();

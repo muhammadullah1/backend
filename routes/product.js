@@ -7,5 +7,6 @@ const { createProduct } = require("../validations/schemas/product");
 router.route("/")
 .get(controller.get)
 .post(validate(createProduct), controller.create);
+router.get("/:id", controller.getOne);
 
 module.exports = router;
