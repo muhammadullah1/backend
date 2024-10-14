@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
     const decoded = jwt.verify(authToken, secret);
 
     const userId = decoded.user._id;    
-    let user = await User.findOne({ _id: userId, role: "user" });
+    let user = await User.findOne({ _id: userId, role: "user" });    
     if (!user) {
       throw new ApiError(400, "Invalid user");
     }
